@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>reveal.js - The HTML Presentation Framework</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/sky.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- syntaxHighlighter -->
+		<script type="text/javascript" src="js/shCore.js"></script>
+		<script type="text/javascript" src="js/shBrushGo.js"></script>
+		<script type="text/javascript" src="js/shBrushPython.js"></script>
+		<script type="text/javascript" src="js/shBrushPhp.js"></script>
+		<script type="text/javascript" src="js/shBrushBash.js"></script>
+		<script type="text/javascript" src="js/shBrushJScript.js"></script>
+		<link rel="stylesheet" href="css/syntaxHighlighter/shCore.css">
+		<link rel="stylesheet" href="css/syntaxHighlighter/shThemeRDark.css">
+
+		<style type="text/css">
+		.syntaxhighlighter {
+			font-size: 28px !important;
+		}
+		</style>
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>The Twelve factor app</h1>
+					<p>Guidelines for web apps / -services</p>
+					<p><a href="http://www.12factor.net/">12factor.net</a></p>
+				</section>
+				<section>
+					<h1>Codebase</h1>
+					<ul>
+						<li>VCS: git, svn, etc.</li>
+						<li>Må ikke dele kode på tværs af apps
+							<ul>
+								<li>Split op i libraries</li>
+							</ul>
+						</li>
+						<li>Hver kørende instans af app'en; prod, staging, development; kalde vi et deploy</li>
+						</ul>
+				</section>
+				<section>
+					<section>
+					<h1>Dependencies</h1>
+					<h3>Declare and isolate</h3>
+					<p>Må ikke afhænge af pakker på system-niveau (PEAR).</p>
+					<p>Brug <em>Dep. declaration manifest</em> og <em>Dep. isolation</em></p>
+					</section><section>
+					<h2>Python</h2>
+					<p><em>pip</em> og <em>virtualenv</em></p>
+					<pre class="brush: bash">
+# requirements.txt
+# ===
+# Flask=0.9
+# Flask-RESTFul=0.7
+# github.com/homburg/pyjade.git
+
+# Isolate in virtualenv
+$ source venv/bin/activate
+
+# Use Dep. declaration manifest
+$ pip install -r requirements.txt
+					</pre>
+					</section><section>
+					<h2>PHP</h2>
+					<p><em>composer</em> og (<em>virtualenv</em>?)</p>
+					<pre class="brush: javascript">
+// composer.json
+{
+	require: {
+		"smarty/smarty": "@stable",
+		"laravel/laravel": "~4"
+	}
+}</pre>
+					</section>
+					<section>
+					<h2>Go ?</h2>
+					<p>Static linking</p>
+					<p>Absolutte imports
+					<pre class="brush: go">
+import "github.com/homburg/amber</pre></p>
+					</section>
+					<section>
+					<h2>Overtrædelser</h2>
+					<ul>
+						<li><code>sendmail</code></li>
+						<li><code>curl</code></li>
+					</ul>
+					</section>
+				</section>
+				<section>
+					<section>
+					<h1>Config</h1>
+						<ul>
+							<li>Database/memcached connection</li>
+							<li>Credentials to external services (unilogin, facebook)</li>
+							<li>...</li>
+						<ul>
+					</section>
+					<section>
+					<ul>
+						<li>Config files</li>
+						<li>Environment variables (anbefalet)
+							<ul>
+								<li>Ikke environments
+								<pre class="brush: php">
+// ...
+
+Config::create(AppEnv::getEnvironment());
+
+//...
+								</li>
+							</ul>
+						</li>
+					</ul>
+					</section>
+				</section>
+				<section>
+					<h1>Backing services</h1>
+					<p><q>Treat backing services as attached resources</q></p>
+				</section>
+				<section>
+					<h1>Build, release, run</h1>
+					<ul>
+						<li>code + dependencies + compilation / "transpilation" =&gt; build</li>
+						<li>build + config =&gt; release</li>
+						<li>release =&gt; runtime</li>
+						<ul>
+							<li>Mulighed for:
+							<ul>
+								<li>Rollback</li>
+							</ul>
+						</ul>
+					</ul>
+				</section>
+				<section>
+					<h1>Processes</h1>
+					<ul>
+						<li>Stateless</li>
+						<li>Share-nothing</li>
+						<li>Persist data</li>
+						<li>Compile assets at build (smarty, sass, etc.)</li>
+					</ul>
+				</section>
+				<section>
+					<h1>Port binding</h1>
+					<p>Håndter egne routes</p>
+				</section>
+				<section>
+					<h1>Concurrent</h1>
+					<p>Web workers - quick response</p>
+					<p>Background workers organiseret i kø-system (php-resque)</p>
+					<br />
+					<h3>Eksempel</h3>
+					<p>Eksterne services med lang svartid</p>
+					<p>Tung arbejde</p>
+				</section>
+				<section>
+					<h1>Disposability</h1>
+					<p>Fast startup / graceful shutdown</p>
+					<p>Behold baggrundsopgaver i køen</p>
+				</section>
+				<section>
+					<h1>Dev/prod parity</h1>
+					<p>Hold dev, stating og prod så ens så muligt</p>
+					<p>Continuous deployment</p>
+					<p>Anbefaling: brug samme services som på prod</p>
+				</section>
+				<section>
+					<h1>Logs</h1>
+					<p>Hæld output ud til stdout og benyt dedikerede værktøjer til at analysere output (Splunk)</p>
+				</section>
+				<section>
+					<h1>Admin processes</h1>
+					<p>Kør scripts i app'ens miljø</p>
+					<ul>
+						<li>Database migrations (alembic, doctrine)</li>
+					</ul>
+				</section>
+				<section>
+					<section>
+						<h1>Flere?</h1>
+						<ul>
+							<li>...</li>
+						</ul>
+					</section>
+					<section>
+						<ul>
+							<li>Testing</li>
+						</ul>
+					</section>
+				</section>
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+			SyntaxHighlighter.all();
+
+		</script>
+
+	</body>
+</html>
