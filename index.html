@@ -53,172 +53,23 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 				<section>
-					<h1>The Twelve factor app</h1>
-					<p>Guidelines for web apps / -services</p>
-					<p><a href="http://www.12factor.net/">12factor.net</a></p>
-				</section>
-				<section>
-					<h1>Codebase</h1>
-					<ul>
-						<li>VCS: git, svn, etc.</li>
-						<li>Må ikke dele kode på tværs af apps
-							<ul>
-								<li>Split op i libraries</li>
-							</ul>
-						</li>
-						<li>Hver kørende instans af app'en; prod, staging, development; kalde vi et deploy</li>
-						</ul>
-				</section>
-				<section>
 					<section>
-					<h1>Dependencies</h1>
-					<h3>Declare and isolate</h3>
-					<p>Må ikke afhænge af pakker på system-niveau (PEAR).</p>
-					<p>Brug <em>Dep. declaration manifest</em> og <em>Dep. isolation</em></p>
-					</section><section>
-					<h2>Python</h2>
-					<p><em>pip</em> og <em>virtualenv</em></p>
-					<pre class="brush: bash">
-# requirements.txt
-# ===
-# Flask=0.9
-# Flask-RESTFul=0.7
-# github.com/homburg/pyjade.git
-
-# Isolate in virtualenv
-$ source venv/bin/activate
-
-# Use Dep. declaration manifest
-$ pip install -r requirements.txt
-					</pre>
-					</section><section>
-					<h2>PHP</h2>
-					<p><em>composer</em> og (<em>virtualenv</em>?)</p>
-					<pre class="brush: javascript">
-// composer.json
-{
-	require: {
-		"smarty/smarty": "@stable",
-		"laravel/laravel": "~4"
-	}
-}</pre>
+						<h1>Angular JS</h1>
+						<p><a href="http://www.angularjs.org/">angularjs.org</a></p>
 					</section>
 					<section>
-					<h2>Go ?</h2>
-					<p>Static linking</p>
-					<p>Absolutte imports
-					<pre class="brush: go">
-import "github.com/homburg/amber</pre></p>
-					</section>
-					<section>
-					<h2>Overtrædelser</h2>
-					<ul>
-						<li><code>sendmail</code></li>
-						<li><code>curl</code></li>
-					</ul>
-					</section>
-				</section>
-				<section>
-					<section>
-					<h1>Config</h1>
+						<h1>Kilder</h1>
 						<ul>
-							<li>Database/memcached connection</li>
-							<li>Credentials to external services (unilogin, facebook)</li>
-							<li>...</li>
-						<ul>
-					</section>
-					<section>
-					<ul>
-						<li>Config files</li>
-						<li>Environment variables (anbefalet)
-							<ul>
-								<li>Ikke environments
-								<pre class="brush: php">
-// ...
-
-Config::create(AppEnv::getEnvironment());
-
-//...
-								</li>
-							</ul>
-						</li>
-					</ul>
-					</section>
-				</section>
-				<section>
-					<h1>Backing services</h1>
-					<p><q>Treat backing services as attached resources</q></p>
-				</section>
-				<section>
-					<h1>Build, release, run</h1>
-					<ul>
-						<li>code + dependencies + compilation / "transpilation" =&gt; build</li>
-						<li>build + config =&gt; release</li>
-						<li>release =&gt; runtime</li>
-						<ul>
-							<li>Mulighed for:
-							<ul>
-								<li>Rollback</li>
-							</ul>
-						</ul>
-					</ul>
-				</section>
-				<section>
-					<h1>Processes</h1>
-					<ul>
-						<li>Stateless</li>
-						<li>Share-nothing</li>
-						<li>Persist data</li>
-						<li>Compile assets at build (smarty, sass, etc.)</li>
-					</ul>
-				</section>
-				<section>
-					<h1>Port binding</h1>
-					<p>Håndter egne routes</p>
-				</section>
-				<section>
-					<h1>Concurrent</h1>
-					<p>Web workers - quick response</p>
-					<p>Background workers organiseret i kø-system (php-resque)</p>
-					<br />
-					<h3>Eksempel</h3>
-					<p>Eksterne services med lang svartid</p>
-					<p>Tung arbejde</p>
-				</section>
-				<section>
-					<h1>Disposability</h1>
-					<p>Fast startup / graceful shutdown</p>
-					<p>Behold baggrundsopgaver i køen</p>
-				</section>
-				<section>
-					<h1>Dev/prod parity</h1>
-					<p>Hold dev, stating og prod så ens så muligt</p>
-					<p>Continuous deployment</p>
-					<p>Anbefaling: brug samme services som på prod</p>
-				</section>
-				<section>
-					<h1>Logs</h1>
-					<p>Hæld output ud til stdout og benyt dedikerede værktøjer til at analysere output (Splunk)</p>
-				</section>
-				<section>
-					<h1>Admin processes</h1>
-					<p>Kør scripts i app'ens miljø</p>
-					<ul>
-						<li>Database migrations (alembic, doctrine)</li>
-					</ul>
-				</section>
-				<section>
-					<section>
-						<h1>Flere?</h1>
-						<ul>
-							<li>...</li>
+							<li>http://egghead.io - Videoer til de enkelte koncepter</li>
+							<li>Angular JS - Brad Green, Shyam Seshadri</li>
+							<li>Youtube - "AngularJS Fundamentals In 60-ish Minutes"</li>
+							<li>http://docs.angularjs.org/api - ...</li>
 						</ul>
 					</section>
-					<section>
-						<ul>
-							<li>Testing</li>
-						</ul>
-					</section>
+				</section>
+				<section>
+					<h2>Status quo</h2>
+					<p>Hvad er der galt med jquery-javascript?</p>
 				</section>
 			</div>
 
