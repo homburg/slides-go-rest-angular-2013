@@ -19,11 +19,12 @@ html(lang='en')
     script(type='text/javascript', src='js/shBrushPhp.js')
     script(type='text/javascript', src='js/shBrushBash.js')
     script(type='text/javascript', src='js/shBrushJScript.js')
+    script(type='text/javascript', src='js/shBrushXml.js')
     link(rel='stylesheet', href='css/syntaxHighlighter/shCore.css')
-    link(rel='stylesheet', href='css/syntaxHighlighter/shThemeRDark.css')
+    link(rel='stylesheet', href='css/syntaxHighlighter/shThemeDefault.css')
     style(type='text/css').
-      .syntaxhighlighter {
-      font-size: 28px !important;
+      body .syntaxhighlighter {
+        font-size: 18px !important;
       }
     // If the query includes 'print-pdf', use the PDF print sheet
     script.
@@ -48,14 +49,109 @@ html(lang='en')
               li http://docs.angularjs.org/api - ...
               li http://docs.angularjs.org/guide
         section
-          h2 Status quo
-          p Hvad er der galt med jquery-javascript?
-          p Hvad er der galt med vanilla js+DOM
-          aside
-            p TODO: Imperative handlinger i ui vs declarative
+          section
+            h1 Status quo
+            p Hvad er der galt med jquery-javascript?
+            p Hvad er der galt med vanilla js+DOM
+            p(style="font-size: 0.7em;") *alting er js + DOM...også angular
+            aside.notes
+              p TODO: Imperative handlinger i ui vs declarative
+          section
+            h2 State i DOM'en
+            pre(class="brush: js").
+              // ...
+
+              runSearch: function ()
+              {
+                  CompanySearch.jqueryTable.datagrid('load',{
+                      query: $('#company-search-filter-query').val(),
+                      search_type: $('#company-search-filter-search-type').val(),
+                      canvas: $('#company-search-filter-canvas').is(':checked'),
+                      debitor: $('#company-search-filter-debitor').is(':checked'),
+                      test: $('#company-search-filter-test').is(':checked'),
+                      group: $('#company-search-filter-group').is(':checked'),
+                      attached: $('#company-search-filter-attached').is(':checked'),
+                      company_group: $('#company-search-filter-company-group').val(),
+                      last_contacted: $('#company-search-sort-last-contacted').is(':checked')
+                  });
+              },
+
+              // ...
+          section
+            h2 Business logic og UI-kode er blandet sammen
+            p UI's behavior er styret af imperative metodekald/mutationer.
+            pre(class="brush: js").
+              // ...
+
+              function handleSomeCallback(status, data) {
+                if (status !== "OK") {
+                  $("#error-list").append("<li>" + data.message + "</li>");
+                  setTimeout(resetErrorList, 2150);
+                  return;
+                }
+
+                // jQuery hide, ved at den skal rydde køen
+                // af igangværende animationer
+                $("#error-list").hide()
+
+                // Use the data to update the DOM
+                $("#discount-code").text("Discount applied!").show()
+
+                var $orderList = $("#order-list");
+                for (var item in data.items) {
+                  var $newOrderItem = $("<div class="\order-item\" />");
+                  $newOrderItem.text(item.description);
+                  $orderList.append($orderList);
+                }
+              }
+
+              // ...
+          section
+            h1 Deklarativ UI
+              aside.notes.
+                Business logic er misvisende, da vores business bare er at opdatere ui.
+            p Vi kender det fra HTML og CSS
+            pre(class="brush: xml").
+              <div class="header-footer-title">
+                <button style="cursor: pointer;">Tryk!</button>
+              </div>
+            p Vi kender data-bindbing fra data-controls
+            pre(class="brush: xml").
+              <div class="data-grid"
+                onchange="doSomething();"
+                onselect="doSomethingElse()">
+              </div>
+          section
+            h2 Deklarativ UI med data-bindings
+            p AngularJS tilføjer direktiver
+            pre(class="brush: xml").
+              <ul>
+                <li ng-repeat="order in orders">
+                  <div ng-bind="order.description"></div>
+                  <input readonly="readonly" ng-bind="order.price"></input>
+                </li>
+              </ul>
+            p Business logic får lov til at være ren business logic
+            pre(class="brush: js").
+              function OrderCtrl($scope) {
+                $scope.orders = [
+                  {description: "...", price: 700}
+                ]
+
+                function addOrder (description, price) {
+                  $scope.orders.push({
+                    description: description,
+                    price: price
+                  })
+                }
+
+                $scope.errors = [
+                  "fejl1", "fejl2"
+                ]
+              }
         section
           h2 runtime
-          aside
+          aside.notes
             $apply, $eval, $digest, $watch
     script(src='lib/js/head.min.js')
     script(src='js/reveal.min.js')
