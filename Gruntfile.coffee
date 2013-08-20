@@ -62,7 +62,7 @@ module.exports = (grunt) ->
     connect:
       server:
         options:
-          port: 8000
+          port: 7000
           base: "."
 
     zip:
