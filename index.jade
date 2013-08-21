@@ -285,9 +285,87 @@ html(lang='en')
                 myApp.service("Person", Person)
                 // ...
         section
+          section
+            h1 Dir structure
+            p Official
+            pre.
+              ...
+                ├── controllers
+                │   ├── FiskCtrl.js
+                │   └── HelloCtrl.js
+                ├── directives
+                │   ├── Box.js
+                │   └── Panel.js
+                └── factories
+                    └── StartupTime.js
+              ...
+          section
+            h2 Mere praktisk (educas)
+            p Bedre egnet til dynamisk loading (requirejs)
+            pre.
+              ...
+              ├── apps
+              │   ├── exercise
+              │   │   ├── Cloze.js
+              │   │   └── MultipleChoice.js
+              │   └── home
+              │       └── Index.js
+              └── util
+                  └── Util.js
+              ...
+        section
           h2 runtime
           aside.notes
             $apply, $eval, $digest, $watch
+        section
+          section
+            h1 Svagheder
+          section
+            h2 Meget kortfattet/magisk syntax
+            pre(class="brush: js").
+              // ...
+              {
+                restrict: "E",
+                scope: {
+                  title: "@",
+                  item: "=",
+                  addItem: "&",
+                  reset: "&"
+              }
+              // ...
+          section
+            h2 Ingen eller uhjælpsomme fejlmeddelelser
+            pre(class="brush: js").
+              // ...
+              app.directive("question", function () {
+                return {
+                  scope: true,
+                  templateUrl: "question.html"
+                }
+              })
+              // ...
+            pre(class="brush: xml").
+              <!-- ... -->
+              <question>...</question>
+              <!-- ... -->
+          section
+            h2 Kører sin egen update/redraw-cycle
+            pre(class="brush: js").
+              // ...
+              setTimeout(function () {
+
+                // ... work
+
+                $scope.$apply(function () {
+                  $scope.person.name = newName;
+                });
+
+              }, 3000);
+              // ...
+            p Se <em>$timeout</em>
+          section
+            h2 Skrøbelig over for DOM-ændringer
+            p Brug altid direktiver til dom-ændringer (fx. jQuery plugins)
     script(src='lib/js/head.min.js')
     script(src='js/reveal.min.js')
     script.
@@ -313,3 +391,6 @@ html(lang='en')
       ]
       });
       SyntaxHighlighter.all();
+.
+
+4 directories, 4 files
