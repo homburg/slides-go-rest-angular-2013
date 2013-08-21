@@ -43,11 +43,11 @@ html(lang='en')
           section
             h1 Kilder
             ul
-              li http://egghead.io - Videoer til de enkelte koncepter
-              li Angular JS - Brad Green, Shyam Seshadri
-              li Youtube - "AngularJS Fundamentals In 60-ish Minutes"
-              li http://docs.angularjs.org/api - ...
-              li http://docs.angularjs.org/guide
+              li <a href="http://egghead.io">egghead.io</a> - Videoer til de enkelte koncepter
+              li <b>Angular JS</b> - Brad Green, Shyam Seshadri
+              li Youtube - <b>"AngularJS Fundamentals In 60-ish Minutes"</b>
+              li <a href="http://docs.angularjs.org/api">docs.angularjs.org/api</a>
+              li <a href="http://docs.angularjs.org/guide">docs.angularjs.org/guide</a>
         section
           section
             h1 Status quo
@@ -115,7 +115,7 @@ html(lang='en')
               <div class="header-footer-title">
                 <button style="cursor: pointer;">Tryk!</button>
               </div>
-            p Vi kender data-bindbing fra data-controls
+            p Vi kender data-binding fra data-controls
             pre(class="brush: xml").
               <div class="data-grid"
                 onchange="doSomething();"
@@ -125,6 +125,9 @@ html(lang='en')
             h2 Deklarativ UI med data-bindings
             p AngularJS tilføjer direktiver
             pre(class="brush: xml").
+              <div ng-show="specialMessage">
+                ...
+              </div>
               <ul>
                 <li ng-repeat="order in orders">
                   <div ng-bind="order.description"></div>
@@ -132,6 +135,7 @@ html(lang='en')
                 </li>
               </ul>
             p Business logic får lov til at være ren business logic
+            p Ingen selectors
             pre(class="brush: js").
               function OrderCtrl($scope) {
                 $scope.orders = [
@@ -148,7 +152,138 @@ html(lang='en')
                 $scope.errors = [
                   "fejl1", "fejl2"
                 ]
+
+                $scope.specialMessage = false
               }
+        section
+          section
+            h1 $scope
+            p Kommunikationen mellem controller og view foregår (primært) via
+            | injected service
+          section
+            h2 Dependency injection
+            p.
+              $scope-servicen, som udgør forbindelsen til viewet er injectet og
+              kan derfor mockes
+            pre(class="brush: js").
+              // ...
+
+              // $scope er resolved by parameter name
+              function HelloCtrl ($scope) {
+
+              }
+
+              // ...
+            p Tip: brug <a href="https://github.com/btford/ngmin">ngmin</a>
+        section
+          section
+            h1 Byggesten
+            p Moduler
+            p Controller
+            p Values og constants
+            p Providers, factories, services
+          section
+            h2 Moduler
+            pre(class="brush: js").
+              // ...
+              (function () {
+                var myApp = angular.module("util", [])
+                ...
+              })();
+              // ...
+            pre(class="brush: js").
+              // ...
+              (function () {
+                var myApp = angular.module("orderPage", ["util"])
+                ...
+              })();
+              // ...
+            p Ingen async/lazy loading. Brug evt require js
+            p <b>Educas</b> Vi minifier + konkatenerer alting
+          section
+            h2 Controller
+            p Logik for et afgrænset område af viewet
+            pre(class="brush: xml").
+               <!-- ... -->
+               <div ng-controller="HelloCtrl">
+                 <ul>
+                   <li ng-repeat="order in orders"> ... </li>
+                 </ul>
+               </div>
+               <!-- ... -->
+            pre(class="brush: js").
+              // ...
+              myApp.controller("HelloCtrl", function ($scope) {
+                $scope.orders = [
+                  // ...
+                ]
+              })
+          section
+            h2 Values og constants
+            pre(class="brush: js").
+              // ...
+              myApp.value("LixNumber", 42)
+
+              myApp.constant("Pi", 4)
+              myApp.config(function ($routeProvider, Pi) {
+                // ...
+              })
+
+              myApp.controller("HelloCtrl", function ($scope, LixNumber, Pi) {
+                $scope.orders = [
+                  // ...
+                ]
+
+                $scope.lixNumber = LixNumber
+              })
+              // ...
+          section
+            h2 Providers
+            p Tillader konfiguration
+            pre(class="brush: js").
+              // ...
+              myApp.provider("FiskProvider", function() {
+                return {
+                  someState: false,
+                  $get: function () {
+                    return "Fisk"
+                  }
+                }
+              })
+
+              myApp.config(function (FiskProvider) {
+                FiskProvider.state = true
+              })
+
+              myApp.controller("HelloCtrl", function(Fisk) {
+                // $get() -> Fisk
+              })
+              // ...
+          section
+            h2 Factories
+            pre(class="brush: js").
+              // ...
+
+              // Shortcut for provider({ $get: <function> })
+              myApp.factory("Fisk", function(Pi) {
+                return Pi * 37
+              });
+
+              myApp.controller("HelloCtrl", function(Fisk) {
+                // Fisk === Pi * 37
+              })
+              // ...
+            section
+              h2 Service
+              p Rarely used
+              pre(class="brush: js").
+                // ...
+                // js "constructor"
+                Person = function () {
+                  this.name = "Finn"
+                }
+                myApp.service("Person", Person)
+                // ...
         section
           h2 runtime
           aside.notes
@@ -162,7 +297,7 @@ html(lang='en')
       controls: true,
       progress: true,
       history: true,
-      center: true,
+      center: false,
       theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
       transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
       // Optional libraries used to extend on reveal.js
